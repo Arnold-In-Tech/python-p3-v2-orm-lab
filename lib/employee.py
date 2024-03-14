@@ -32,6 +32,7 @@ class Employee:
                 "Name must be a non-empty string"
             )
 
+
     @property
     def job_title(self):
         return self._job_title
@@ -187,4 +188,18 @@ class Employee:
 
     def reviews(self):
         """Return list of reviews associated with current employee"""
-        pass
+        from review import Review
+
+        sql = """
+                SELECT *
+                FROM reviews
+                WHERE employee_id = ?
+        """
+        CURSOR.execute(sql, (self.id,),)
+
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+        return [
+            Review.instance_from_db(row) for row in rows
+            ]
+
